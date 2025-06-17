@@ -100,3 +100,33 @@ class DecisionTransformer(nn.Module):
         action_preds = self.predict_action(state_reps)
 
         return action_preds
+# Conceptual PyTorch Training Loop
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
+model.train()
+
+for epoch in range(num_epochs):
+    for batch in dataloader:
+        # Unpack batch and move to device
+        states, actions, rtg, timesteps, mask = batch
+        states, actions, rtg, timesteps, mask = \
+            states.to(device), actions.to(device), rtg.to(device), timesteps.to(device), mask.to(device)
+
+        # Forward pass
+        action_preds = model(
+            states=states,
+            actions=actions,
+            returns_to_go=rtg,
+            timesteps=timesteps,
+            attention_mask=mask
+        )
+
+        # Compute loss - only on the action predictions
+        # The target is the actual action taken in the dataset
+        action_targets = actions
+        loss = F.mse_loss(action_preds, action_targets)
+
+        # Backward pass and optimization
+        optimizer.zero_grad()
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0) # Optional gradient clipping
+        optimizer.step()
