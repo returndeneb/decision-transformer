@@ -47,8 +47,8 @@ Overall Structure
 The Decision Transformer employs a GPT-style, decoder-only Transformer architecture. It processes a sequence of past experiences and a target return to autoregressively predict the action that should be taken at the current timestep. The key components are the input tokenization scheme, the embedding layers, the causally masked Transformer backbone, and the prediction heads. Figure 1 provides a high-level schematic of this architecture.  
 
 Figure 1: Decision Transformer Architecture
-!(https://i.imgur.com/G5g2m5L.png)
-*Source: Chen et al., 2021 *
+!(https://upload.wikimedia.org/wikipedia/commons/2/2e/Decision_Transformer_architecture.png)
+
 
 As illustrated, states, actions, and returns-to-go are processed into embeddings, augmented with positional encodings, and then fed into a GPT-style architecture that uses a causal self-attention mask to predict actions autoregressively.
 
